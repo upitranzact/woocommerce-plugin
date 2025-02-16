@@ -1,14 +1,17 @@
 <?php
 /*
-Plugin Name: UPITranzact: Payment Gateway
+Plugin Name: UPITranzact Payment Gateway
 Plugin URI: https://upitranzact.com
 Description: Fast, secure, and reliable payment gateway designed for seamless UPI transactions. Accept payments instantly, manage funds effortlessly, and provide a smooth checkout experience for your customers. Whether you're a business or an individual
 Version: 1.0.2
 Stable tag: 1.0.2
 Author: Team UPITranzact
-WC tested up to: 9.1.2
+Text Domain: upitranzact-payment-gateway
+WC tested up to: 6.7
 Author URI: https://upitranzact.com
 Copyright: © 2023-2025 UPITranzact
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 */
 
 if (!defined('ABSPATH')) {
@@ -26,6 +29,13 @@ function upitranzact_check_woocommerce() {
 }
 
 add_action('plugins_loaded', 'init_upitranzact_gateway', 11);
+
+add_action('before_woocommerce_init', function() {
+	if (class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class))
+    {
+		\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility('custom_order_tables', __FILE__, true);
+	}
+});
 
 function init_upitranzact_gateway() {
     if (!upitranzact_check_woocommerce()) {

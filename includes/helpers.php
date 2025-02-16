@@ -23,7 +23,8 @@ function process_upitranzact_payment($order_id, $gateway) {
             ),
             $order->get_checkout_order_received_url()
         ),
-        'note' => sprintf(__('Payment for order %s', 'woocommerce'), $order_id),
+        /* translators: payment remark for future reference */
+        'note' => sprintf(__('Payment for order %s', 'upitranzact-payment-gateway'), $order_id),
         'customer_name' => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
         'customer_email' => $order->get_billing_email(),
         'customer_mobile' => $order->get_billing_phone(),
@@ -44,7 +45,7 @@ function process_upitranzact_payment($order_id, $gateway) {
     ));
 
     if (is_wp_error($response)) {
-        wc_add_notice(__('Connection error:', 'woocommerce') . ' ' . $response->get_error_message(), 'error');
+        wc_add_notice(__('Connection error:', 'upitranzact-payment-gateway') . ' ' . $response->get_error_message(), 'error');
         return;
     }
 
@@ -53,7 +54,7 @@ function process_upitranzact_payment($order_id, $gateway) {
     $body = json_decode(wp_remote_retrieve_body($response), true);
     
     if (empty($body) || !is_array($body)) {
-        wc_add_notice(__('Invalid response from payment gateway', 'woocommerce'), 'error');
+        wc_add_notice(__('Invalid response from payment gateway', 'upitranzact-payment-gateway'), 'error');
         return;
     }
 
@@ -63,16 +64,16 @@ function process_upitranzact_payment($order_id, $gateway) {
         return array('result' => 'success', 'redirect' => $body['data']['payment_url']);
     }
 
-    wc_add_notice(__('Payment error: ', 'woocommerce') . ($body['msg'] ?? 'Unknown error'), 'error');
+    wc_add_notice(__('Payment error: ', 'upitranzact-payment-gateway') . ($body['msg'] ?? 'Unknown error'), 'error');
     return;
 }
 
 function handle_upitranzact_response() {
     if (!isset($_GET['order_id']) || !isset($_GET['txn_id']) || !isset($_GET['wc-api'])) {
-        wp_die(__('Invalid request', 'woocommerce'), '', array('response' => 400));
+        wp_die(__('Invalid request', 'upitranzact-payment-gateway'), '', array('response' => 400));
     }
     if ($_GET['wc-api'] !== 'WC_Gateway_UPITranzact') {
-        wp_die(__('Invalid callback', 'woocommerce'), '', array('response' => 400));
+        wp_die(__('Invalid callback', 'upitranzact-payment-gateway'), '', array('response' => 400));
     }
     
     $order_id = sanitize_text_field($_GET['order_id']);
@@ -80,7 +81,7 @@ function handle_upitranzact_response() {
     $order = wc_get_order($order_id);
     
     if (!$order) {
-        wp_die(__('Order not found', 'woocommerce'), '', array('response' => 404));
+        wp_die(__('Order not found', 'upitranzact-payment-gateway'), '', array('response' => 404));
     }
     
     if ($order->is_paid()) {
@@ -92,7 +93,7 @@ function handle_upitranzact_response() {
     $stored_order_id = get_post_meta($order->get_id(), '_upitranzact_order_id', true);
     
     if ($stored_order_id !== $txn_id) {
-        $order->update_status('failed', __('Order ID mismatch', 'woocommerce'));
+        $order->update_status('failed', __('Order ID mismatch', 'upitranzact-payment-gateway'));
         wp_redirect(wc_get_checkout_url());
         exit;
     }
@@ -111,14 +112,15 @@ function handle_upitranzact_response() {
     ]);
     
     if (is_wp_error($response)) {
-        $order->update_status('failed', __('Payment verification failed: Gateway connection error', 'woocommerce'));
+        $order->update_status('failed', __('Payment verification failed: Gateway connection error', 'upitranzact-payment-gateway'));
         wp_redirect(wc_get_checkout_url());
         exit;
     }
     
     $http_code = wp_remote_retrieve_response_code($response);
     if ($http_code !== 200) {
-        $order->update_status('failed', sprintf(__('Payment verification failed: HTTP %s', 'woocommerce'), $http_code));
+        /* translators: update payment if response not eqaul to 200 */
+        $order->update_status('failed', sprintf(__('Payment verification failed: HTTP %s', 'upitranzact-payment-gateway'), $http_code));
         wp_redirect(wc_get_checkout_url());
         exit;
     }
@@ -126,7 +128,7 @@ function handle_upitranzact_response() {
     $body = json_decode(wp_remote_retrieve_body($response), true);
     
     if (empty($body) || !is_array($body)) {
-        $order->update_status('failed', __('Invalid response during verification', 'woocommerce'));
+        $order->update_status('failed', __('Invalid response during verification', 'upitranzact-payment-gateway'));
         wp_redirect(wc_get_checkout_url());
         exit;
     }
@@ -136,7 +138,8 @@ function handle_upitranzact_response() {
         $order_amount = floatval($order->get_total());
         
         if (abs($paid_amount - $order_amount) > 0.01) {
-            $order->update_status('failed', sprintf(__('Payment amount mismatch. Expected: %s, Received: %s', 'woocommerce'),
+            /* translators: check amount matches with order amount */
+            $order->update_status('failed', sprintf(__('Payment amount mismatch. Expected: %s, Received: %s', 'upitranzact-payment-gateway'),
                 $order_amount, $paid_amount));
             wp_redirect(wc_get_checkout_url());
             exit;
@@ -144,18 +147,18 @@ function handle_upitranzact_response() {
         
         if ($body['statusCode'] == 200 && $body['txnStatus'] == 'SUCCESS') {
             $order->payment_complete();
-            $order->add_order_note(__('Payment successful via UPITranzact', 'woocommerce'));
-            wc_add_notice(__('Payment successful!', 'woocommerce'), 'success');
+            $order->add_order_note(__('Payment successful via UPITranzact', 'upitranzact-payment-gateway'));
+            wc_add_notice(__('Payment successful!', 'upitranzact-payment-gateway'), 'success');
             wp_redirect($order->get_checkout_order_received_url());
             exit;
         }
-        
-        $order->update_status('failed', sprintf(__('Payment failed: %s', 'woocommerce'),
+        /* translators: update order status */
+        $order->update_status('failed', sprintf(__('Payment failed: %s', 'upitranzact-payment-gateway'),
             $body['msg'] ?? 'Unknown error'));
-        wc_add_notice(__('Payment failed. Please try again.', 'woocommerce'), 'error');
+        wc_add_notice(__('Payment failed. Please try again.', 'upitranzact-payment-gateway'), 'error');
     } else {
-        $order->update_status('failed', __('Payment verification failed: Invalid response', 'woocommerce'));
-        wc_add_notice(__('Payment verification failed. Please contact support.', 'woocommerce'), 'error');
+        $order->update_status('failed', __('Payment verification failed: Invalid response', 'upitranzact-payment-gateway'));
+        wc_add_notice(__('Payment verification failed. Please contact support.', 'upitranzact-payment-gateway'), 'error');
     }
     
     wp_redirect(wc_get_checkout_url());

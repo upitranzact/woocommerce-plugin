@@ -6,8 +6,8 @@ if (!defined('ABSPATH')) {
 class WC_Gateway_UpiTranZact extends WC_Payment_Gateway {
     public function __construct() {
         $this->id = 'upitranzact';
-        $this->method_title = __('UPITranzact', 'woocommerce');
-        $this->method_description = __('Accept payments via UPITranzact Payment Gateway.', 'woocommerce');
+        $this->method_title = __('UPITranzact', 'upitranzact-payment-gateway');
+        $this->method_description = __('Accept payments via UPITranzact Payment Gateway.', 'upitranzact-payment-gateway');
         $this->supports = array('products');
 
         $this->init_form_fields();
@@ -26,16 +26,16 @@ class WC_Gateway_UpiTranZact extends WC_Payment_Gateway {
     public function init_form_fields() {
         $this->form_fields = array(
             'enabled' => array(
-                'title' => __('Enable/Disable', 'woocommerce'),
+                'title' => __('Enable/Disable', 'upitranzact-payment-gateway'),
                 'type' => 'checkbox',
-                'label' => __('Enable UPITranzact Payment', 'woocommerce'),
+                'label' => __('Enable UPITranzact Payment', 'upitranzact-payment-gateway'),
                 'default' => 'yes'
             ),
             'title' => array(
-                'title' => __('Title', 'woocommerce'),
+                'title' => __('Title', 'upitranzact-payment-gateway'),
                 'type' => 'text',
-                'description' => __('Title customers see at checkout.', 'woocommerce'),
-                'default' => __('UPITranzact', 'woocommerce'),
+                'description' => __('Title customers see at checkout.', 'upitranzact-payment-gateway'),
+                'default' => __('UPITranzact', 'upitranzact-payment-gateway'),
                 'desc_tip'    => true,
             ),
             'description' => array(
@@ -45,15 +45,15 @@ class WC_Gateway_UpiTranZact extends WC_Payment_Gateway {
                 'default'     => 'Pay with any UPI App',
             ),
             'mid' => array(
-                'title' => __('Merchant ID', 'woocommerce'),
+                'title' => __('Merchant ID', 'upitranzact-payment-gateway'),
                 'type' => 'text',
             ),
             'public_key' => array(
-                'title' => __('Public Key', 'woocommerce'),
+                'title' => __('Public Key', 'upitranzact-payment-gateway'),
                 'type' => 'text',
             ),
             'secret_key' => array(
-                'title' => __('Secret Key', 'woocommerce'),
+                'title' => __('Secret Key', 'upitranzact-payment-gateway'),
                 'type' => 'text',
             ),
         );
