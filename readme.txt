@@ -22,14 +22,14 @@ This plugin connects to the UPITranzact API (`api.upitranzact.com`) to process p
    - **Data sent:** Merchant ID, order ID, public and secret keys, and transaction details.  
    - **When data is sent:** When creating a payment request or checking payment status.  
 
-2. **UPITranzact Website (`upitranzact.com`)**  
+2. **UPITranzact Website (`business.upitranzact.com`)**  
    - **What it is used for:** Merchant authentication, dashboard services, and API documentation access.  
    - **Data sent:** Basic merchant details for authentication and API key verification.  
    - **When data is sent:** When accessing merchant dashboard or verifying credentials.  
 
 **Service Provider:** UPITranzact  
-- **Terms of Service:** [https://upitranzact.com/terms](https://upitranzact.com/terms)  
-- **Privacy Policy:** [https://upitranzact.com/privacy](https://upitranzact.com/privacy)  
+- **Terms of Service:** https://business.upitranzact.com/terms
+- **Privacy Policy:** https://business.upitranzact.com/privacy 
 
 == Installation ==  
 1. Upload `upitranzact-payment-gateway` to `/wp-content/plugins/`.  
