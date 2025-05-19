@@ -1,0 +1,176 @@
+/* UPITranzact Payment Styling */
+
+/* Payment method logo sizing */
+.wc_payment_method.payment_method_upitranzact img {
+    max-height: 32px;
+    max-width: 100px;
+    width: auto;
+    vertical-align: middle;
+}
+
+/* Main payment container styling */
+.upitranzact-payment-description {
+    background-color: #f5f6f7;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 0;
+}
+
+/* Main pay with UPI heading */
+.upitranzact-payment-description h4 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 15px;
+    color: #333;
+    font-weight: 500;
+    display: inline-block;
+}
+
+/* Payment methods icons */
+.upitranzact-payment-methods {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.upitranzact-payment-method-info {
+    font-size: 14px;
+    color: #555;
+    margin-right: 10px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+/* UPI apps display */
+.upitranzact-upi-apps {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px;
+    flex: 1;
+}
+
+.upitranzact-upi-app {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    border-radius: 6px;
+    padding: 6px 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.upitranzact-upi-app:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.upitranzact-upi-app img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    margin-right: 6px;
+}
+
+.upitranzact-upi-app span {
+    font-size: 12px;
+    color: #333;
+    font-weight: 500;
+}
+
+/* Payment method container styling */
+.wc_payment_method.payment_method_upitranzact {
+    border-radius: 6px;
+    padding: 10px;
+    transition: all 0.3s ease;
+}
+
+.wc_payment_method.payment_method_upitranzact.active {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+}
+
+/* Payment method label styling */
+.wc_payment_method.payment_method_upitranzact label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+}
+
+/* Payment description styling */
+.payment_box.payment_method_upitranzact {
+    background-color: #f8f9fa !important;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 0 !important;
+    margin-top: 5px !important;
+}
+
+.payment_box.payment_method_upitranzact::before {
+    display: none !important;
+}
+
+/* UPITranzact brand colors for accent */
+.wc_payment_method.payment_method_upitranzact.active label {
+    color: #7a40f2;
+}
+
+/* Make sure radio button is aligned properly */
+.wc_payment_method.payment_method_upitranzact input[type="radio"] {
+    margin-top: 0;
+}
+
+/* Responsive fixes */
+@media (max-width: 768px) {
+    .wc_payment_method.payment_method_upitranzact label {
+        flex-wrap: wrap;
+    }
+    
+    .upitranzact-payment-methods {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .upitranzact-payment-method-info {
+        margin-bottom: 8px;
+        margin-right: 0;
+    }
+    
+    .upitranzact-upi-apps {
+        flex-wrap: wrap;
+        gap: 8px;
+        width: 100%;
+    }
+    
+    .upitranzact-upi-app {
+        width: calc(50% - 4px);
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .upitranzact-upi-apps {
+        gap: 6px;
+    }
+    
+    .upitranzact-upi-app {
+        padding: 5px 8px;
+    }
+    
+    .upitranzact-upi-app img {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .upitranzact-upi-app span {
+        font-size: 11px;
+    }
+    
+    .upitranzact-payment-description {
+        padding: 12px;
+    }
+} 
