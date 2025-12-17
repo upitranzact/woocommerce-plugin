@@ -1,4 +1,5 @@
 <?php
+
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -21,9 +22,8 @@ function process_upitranzact_payment($order_id, $gateway) {
                 'txn_id'   => $unique_order_id,
                 'order_id' => $order_id
             ),
-            $order->get_checkout_order_received_url()
+            home_url('/wc-api/WC_Gateway_UPITranzact/')
         ),
-        /* translators: payment remark for future reference */
         'note' => sprintf(__('Payment for order %s', 'upitranzact-payment-gateway'), $order_id),
         'customer_name' => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
         'customer_email' => $order->get_billing_email(),
@@ -59,7 +59,6 @@ function process_upitranzact_payment($order_id, $gateway) {
     }
 
     if (!empty($body['status']) && !empty($body['data']['payment_url'])) {
-        
         update_post_meta($order_id, '_upitranzact_order_id', $unique_order_id);
         return array('result' => 'success', 'redirect' => $body['data']['payment_url']);
     }
@@ -89,7 +88,7 @@ function handle_upitranzact_response() {
         exit;
     }
     
-    $gateway = new WC_Gateway_UPITranzact();
+    $gateway = new WC_Gateway_UpiTranZact();
     $stored_order_id = get_post_meta($order->get_id(), '_upitranzact_order_id', true);
     
     if ($stored_order_id !== $txn_id) {
@@ -119,7 +118,6 @@ function handle_upitranzact_response() {
     
     $http_code = wp_remote_retrieve_response_code($response);
     if ($http_code !== 200) {
-        /* translators: update payment if response not eqaul to 200 */
         $order->update_status('failed', sprintf(__('Payment verification failed: HTTP %s', 'upitranzact-payment-gateway'), $http_code));
         wp_redirect(wc_get_checkout_url());
         exit;
@@ -138,7 +136,6 @@ function handle_upitranzact_response() {
         $order_amount = floatval($order->get_total());
         
         if (abs($paid_amount - $order_amount) > 0.01) {
-            /* translators: check amount matches with order amount */
             $order->update_status('failed', sprintf(__('Payment amount mismatch. Expected: %s, Received: %s', 'upitranzact-payment-gateway'),
                 $order_amount, $paid_amount));
             wp_redirect(wc_get_checkout_url());
@@ -152,7 +149,6 @@ function handle_upitranzact_response() {
             wp_redirect($order->get_checkout_order_received_url());
             exit;
         }
-        /* translators: update order status */
         $order->update_status('failed', sprintf(__('Payment failed: %s', 'upitranzact-payment-gateway'),
             $body['msg'] ?? 'Unknown error'));
         wc_add_notice(__('Payment failed. Please try again.', 'upitranzact-payment-gateway'), 'error');
