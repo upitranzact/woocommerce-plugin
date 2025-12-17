@@ -13,7 +13,7 @@ class WC_Gateway_UpiTranZact extends WC_Payment_Gateway {
 
         $icon_url = UPITRANZACT_PLUGIN_URL . 'assets/upitranzact-logo.png';
         if (!file_exists(UPITRANZACT_PLUGIN_DIR . 'assets/upitranzact-logo.png')) {
-            $icon_url = 'https://www.upitranzact.com/public/asset/images/logo.svg';
+            $icon_url = 'https://www.upitranzact.com/logo/upitranzact-logo.png';
         }
         $this->icon = apply_filters('woocommerce_upitranzact_icon', $icon_url);
 
