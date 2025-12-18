@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return array|null
  */
-function process_upitranzact_payment( $order_id, $gateway ) {
+function upitranzact_process_payment( $order_id, $gateway ) {
 
 	// Fetch WooCommerce order.
 	$order = wc_get_order( $order_id );
@@ -44,6 +44,10 @@ function process_upitranzact_payment( $order_id, $gateway ) {
 	 * Only required transaction and customer details
 	 * are sent to the payment gateway.
 	 */
+
+	/* translators: %s: WooCommerce order ID */
+	$note = sprintf( esc_html__( 'Payment for order %s', 'upitranzact-payment-gateway' ), $order_id );
+
 	$data = array(
 		'mid'             => $gateway->mid,
 		'amount'          => number_format( $order->get_total(), 2, '.', '' ),
@@ -56,10 +60,7 @@ function process_upitranzact_payment( $order_id, $gateway ) {
 			),
 			home_url( '/wc-api/WC_Gateway_UPITranzact/' )
 		),
-		'note'            => sprintf(
-			__( 'Payment for order %s', 'upitranzact-payment-gateway' ),
-			$order_id
-		),
+		'note'            => $note,
 		'customer_name'   => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
 		'customer_email'  => $order->get_billing_email(),
 		'customer_mobile' => $order->get_billing_phone(),
@@ -136,29 +137,47 @@ function process_upitranzact_payment( $order_id, $gateway ) {
  *
  * @return void
  */
-function handle_upitranzact_response() {
+function upitranzact_handle_response() {
+
+	// phpcs:disable WordPress.Security.NonceVerification.Recommended
+	// Reason: This is a payment gateway callback endpoint (server-to-server request).
+	// Nonce verification is not applicable for third-party payment provider callbacks.
 
 	// Validate required callback parameters.
 	if ( ! isset( $_GET['order_id'], $_GET['txn_id'], $_GET['wc-api'] ) ) {
-		wp_die( __( 'Invalid request', 'upitranzact-payment-gateway' ), '', array( 'response' => 400 ) );
+		wp_die(
+			esc_html__( 'Invalid request', 'upitranzact-payment-gateway' ),
+			'',
+			array( 'response' => 400 )
+		);
 	}
 
 	// Ensure callback is routed to correct gateway.
 	if ( $_GET['wc-api'] !== 'WC_Gateway_UPITranzact' ) {
-		wp_die( __( 'Invalid callback', 'upitranzact-payment-gateway' ), '', array( 'response' => 400 ) );
+		wp_die(
+			esc_html__( 'Invalid callback', 'upitranzact-payment-gateway' ),
+			'',
+			array( 'response' => 400 )
+		);
 	}
 
-	$order_id = sanitize_text_field( $_GET['order_id'] );
-	$txn_id   = sanitize_text_field( $_GET['txn_id'] );
+	$order_id = sanitize_text_field( wp_unslash( $_GET['order_id'] ) );
+	$txn_id   = sanitize_text_field( wp_unslash( $_GET['txn_id'] ) );
 	$order    = wc_get_order( $order_id );
 
+	// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
 	if ( ! $order ) {
-		wp_die( __( 'Order not found', 'upitranzact-payment-gateway' ), '', array( 'response' => 404 ) );
+		wp_die(
+			esc_html__( 'Order not found', 'upitranzact-payment-gateway' ),
+			'',
+			array( 'response' => 404 )
+		);
 	}
 
 	// Redirect immediately if order is already paid.
 	if ( $order->is_paid() ) {
-		wp_redirect( $order->get_checkout_order_received_url() );
+		wp_safe_redirect( $order->get_checkout_order_received_url() );
 		exit;
 	}
 
@@ -171,7 +190,7 @@ function handle_upitranzact_response() {
 			'failed',
 			__( 'Order ID mismatch', 'upitranzact-payment-gateway' )
 		);
-		wp_redirect( wc_get_checkout_url() );
+		wp_safe_redirect( wc_get_checkout_url() );
 		exit;
 	}
 
@@ -202,7 +221,7 @@ function handle_upitranzact_response() {
 			'failed',
 			__( 'Payment verification failed: Gateway connection error', 'upitranzact-payment-gateway' )
 		);
-		wp_redirect( wc_get_checkout_url() );
+		wp_safe_redirect( wc_get_checkout_url() );
 		exit;
 	}
 
@@ -214,7 +233,7 @@ function handle_upitranzact_response() {
 			'failed',
 			__( 'Invalid response during verification', 'upitranzact-payment-gateway' )
 		);
-		wp_redirect( wc_get_checkout_url() );
+		wp_safe_redirect( wc_get_checkout_url() );
 		exit;
 	}
 
@@ -229,12 +248,14 @@ function handle_upitranzact_response() {
 			$order->update_status(
 				'failed',
 				sprintf(
-					__( 'Payment amount mismatch. Expected: %s, Received: %s', 'upitranzact-payment-gateway' ),
+					/* translators: 1: Expected order amount, 2: Paid amount received */
+					__( 'Payment amount mismatch. Expected: %1$s, Received: %2$s', 'upitranzact-payment-gateway' ),
 					$order_amount,
 					$paid_amount
 				)
 			);
-			wp_redirect( wc_get_checkout_url() );
+
+			wp_safe_redirect( wc_get_checkout_url() );
 			exit;
 		}
 
@@ -243,7 +264,7 @@ function handle_upitranzact_response() {
 			$order->payment_complete();
 			$order->add_order_note( __( 'Payment successful via UPITranzact', 'upitranzact-payment-gateway' ) );
 			wc_add_notice( __( 'Payment successful!', 'upitranzact-payment-gateway' ), 'success' );
-			wp_redirect( $order->get_checkout_order_received_url() );
+			wp_safe_redirect( $order->get_checkout_order_received_url() );
 			exit;
 		}
 
@@ -251,6 +272,7 @@ function handle_upitranzact_response() {
 		$order->update_status(
 			'failed',
 			sprintf(
+				/* translators: Payment failed message */
 				__( 'Payment failed: %s', 'upitranzact-payment-gateway' ),
 				$body['msg'] ?? 'Unknown error'
 			)
@@ -267,6 +289,6 @@ function handle_upitranzact_response() {
 		);
 	}
 
-	wp_redirect( wc_get_checkout_url() );
+	wp_safe_redirect( wc_get_checkout_url() );
 	exit;
 }

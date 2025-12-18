@@ -1,7 +1,7 @@
 === UPITranzact Payment Gateway ===
 Contributors: upitranzact
 Donate link: https://www.upitranzact.com
-Tags: woocommerce, upitranzact, upi, payment, qr, india, intent
+Tags: woocommerce, upi, payment, qr, india
 Requires at least: 4.7
 Tested up to: 6.9
 Stable tag: 1.1.0
@@ -10,7 +10,7 @@ Requires Plugins: woocommerce
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-UPITranzact WooCommerce Plugin enables WooCommerce stores to accept UPI payments using QR codes and UPI intent flows across all UPI-enabled apps in India.
+Accept UPI payments in WooCommerce using QR code and UPI intent with UPITranzact.
 
 == Description ==
 

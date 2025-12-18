@@ -47,10 +47,12 @@ class WC_Gateway_UpiTranZact extends WC_Payment_Gateway {
 		 * Falls back to hosted logo if local asset is missing.
 		 */
 		$icon_url = UPITRANZACT_PLUGIN_URL . 'assets/upitranzact-logo.png';
+
 		if ( ! file_exists( UPITRANZACT_PLUGIN_DIR . 'assets/upitranzact-logo.png' ) ) {
 			$icon_url = 'https://www.upitranzact.com/logo/upitranzact-logo.png';
 		}
-		$this->icon = apply_filters( 'woocommerce_upitranzact_icon', $icon_url );
+
+		$this->icon = apply_filters( 'upitranzact_icon', $icon_url );
 
 		// Initialize admin form fields and saved settings.
 		$this->init_form_fields();
@@ -151,7 +153,7 @@ class WC_Gateway_UpiTranZact extends WC_Payment_Gateway {
 	 */
 	public function process_payment( $order_id ) {
 		require_once UPITRANZACT_PLUGIN_DIR . 'includes/helpers.php';
-		return process_upitranzact_payment( $order_id, $this );
+		return upitranzact_process_payment( $order_id, $this );
 	}
 
 	/**
@@ -163,7 +165,7 @@ class WC_Gateway_UpiTranZact extends WC_Payment_Gateway {
 	 */
 	public function handle_response() {
 		require_once UPITRANZACT_PLUGIN_DIR . 'includes/helpers.php';
-		handle_upitranzact_response();
+		upitranzact_handle_response();
 	}
 
 	/**

@@ -80,7 +80,7 @@ function upitranzact_check_woocommerce() {
  *
  * Priority 11 ensures WooCommerce is loaded before initializing the gateway.
  */
-add_action( 'plugins_loaded', 'init_upitranzact_gateway', 11 );
+add_action( 'plugins_loaded', 'upitranzact_gateway_init', 11 );
 
 /**
  * Declare compatibility with WooCommerce features.
@@ -109,7 +109,7 @@ add_action(
  *
  * @return void
  */
-function init_upitranzact_gateway() {
+function upitranzact_gateway_init() {
 	if ( ! upitranzact_check_woocommerce() ) {
 		return;
 	}
