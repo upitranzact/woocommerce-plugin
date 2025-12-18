@@ -1,4 +1,4 @@
-=== UPITranzact WooCommerce Plugin ===
+=== UPITranzact for WooCommerce ===
 Contributors: upitranzact
 Donate link: https://www.upitranzact.com
 Tags: woocommerce, upitranzact, upi, payment, qr, india, intent
