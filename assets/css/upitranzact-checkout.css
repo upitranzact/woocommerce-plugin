@@ -1,18 +1,32 @@
+/**
+ * UPITranzact WooCommerce Checkout Styles
+ *
+ * This stylesheet controls the appearance of the UPITranzact
+ * payment method on both classic and block-based checkout.
+ *
+ * Scope is limited to UPITranzact-specific classes to avoid
+ * conflicts with themes or other payment gateways.
+ */
+
+/* Payment method label (used in block checkout list) */
 .upitranzact-label {
     font-weight: 500;
     color: #333;
     font-size: 15px;
 }
 
+/* Wrapper container for the payment content */
 .upitranzact-payment-box {
     padding: 0;
     margin: 0;
 }
 
+/* Inner content area */
 .upitranzact-content {
     padding: 12px 0;
 }
 
+/* Payment description text */
 .upitranzact-text {
     margin: 0 0 10px 0;
     font-size: 13px;
@@ -20,6 +34,7 @@
     font-weight: 500;
 }
 
+/* Container holding supported UPI app icons */
 .upitranzact-apps-row {
     display: flex;
     gap: 10px;
@@ -27,6 +42,7 @@
     flex-wrap: wrap;
 }
 
+/* Individual UPI app icon wrapper */
 .upitranzact-app-item {
     display: flex;
     align-items: center;
@@ -36,18 +52,21 @@
     transition: all 0.2s ease;
 }
 
+/* Hover effect for app icons */
 .upitranzact-app-item:hover {
     border-color: #7a40f2;
     background: #f5f2ff;
     box-shadow: 0 2px 4px rgba(122, 64, 242, 0.1);
 }
 
+/* UPI app logo styling */
 .upitranzact-app-logo {
     width: 28px;
     height: 28px;
     object-fit: contain;
 }
 
+/* Classic WooCommerce payment method container */
 .wc_payment_method.payment_method_upitranzact {
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -56,12 +75,14 @@
     transition: all 0.2s ease;
 }
 
+/* Active/selected payment method styling */
 .wc_payment_method.payment_method_upitranzact.active {
     border-color: #7a40f2;
     background-color: #f9f7ff;
     box-shadow: 0 2px 6px rgba(122, 64, 242, 0.12);
 }
 
+/* Label styling inside the payment method */
 .wc_payment_method.payment_method_upitranzact label {
     display: flex;
     align-items: center;
@@ -70,12 +91,14 @@
     cursor: pointer;
 }
 
+/* Radio input customization */
 .wc_payment_method.payment_method_upitranzact input[type="radio"] {
     margin: 0;
     accent-color: #7a40f2;
     cursor: pointer;
 }
 
+/* Remove default WooCommerce payment box background */
 .payment_box.payment_method_upitranzact {
     background: transparent !important;
     border: none !important;
@@ -83,11 +106,19 @@
     margin: 0 !important;
 }
 
+/* Remove default triangle indicator */
 .payment_box.payment_method_upitranzact::before {
     display: none !important;
 }
 
+/* ---------------------------
+ * Responsive adjustments
+ * ---------------------------
+ */
+
+/* Tablet and small screens */
 @media (max-width: 768px) {
+
     .upitranzact-apps-row {
         gap: 8px;
     }
@@ -111,7 +142,9 @@
     }
 }
 
+/* Mobile devices */
 @media (max-width: 480px) {
+
     .upitranzact-apps-row {
         gap: 6px;
     }
