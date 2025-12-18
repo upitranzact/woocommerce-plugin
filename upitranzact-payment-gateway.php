@@ -1,13 +1,13 @@
 <?php
 /**
- * Plugin Name: UPITranzact for WooCommerce
+ * Plugin Name: UPITranzact Payment Gateway
  * Plugin URI: https://github.com/upitranzact/upitranzact-woocommerce-plugin
  * Description: Fast, secure, and reliable payment gateway designed for seamless UPI transactions. Accept payments instantly, manage funds effortlessly, and provide a smooth checkout experience for WooCommerce customers in India.
  * Version: 1.1.0
  * Stable tag: 1.1.0
  * Author: Team UPITranzact
  * Author URI: https://www.upitranzact.com
- * Text Domain: upitranzact-for-woocommerce
+ * Text Domain: upitranzact-payment-gateway
  * WC tested up to: 6.9
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
